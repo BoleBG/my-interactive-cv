@@ -2,6 +2,18 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+# Create the Next.js project
+npx create-next-app@latest my-interactive-cv --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*" --use-npm
+
+# Navigate into the project
+cd my-interactive-cv
+
+# Install all dependencies
+npm install framer-motion lucide-react @react-three/fiber @react-three/drei three next-themes
+npm install -D @types/three
+
+
+
 First, run the development server:
 
 ```bash
