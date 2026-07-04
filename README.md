@@ -46,3 +46,92 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Deploying to GitHub Pages (Static HTML Export)
+
+This project has been prepared for **GitHub Pages** deployment using a static HTML export configuration.
+
+### How it works
+Next.js is configured with `output: 'export'` in `next.config.ts`. Running the build command compiles the React application into pure, static HTML, CSS, and JS files, saving them in the `out/` folder.
+
+### Configuration Options
+Open `next.config.ts`:
+1. **Custom Domain / Root Site** (e.g., `https://<username>.github.io`):
+   No changes needed.
+2. **Project Repository Sub-path** (e.g., `https://<username>.github.io/my-interactive-cv`):
+   Set the `basePath` option to match your repository name:
+   ```typescript
+   const nextConfig: NextConfig = {
+     output: 'export',
+     basePath: '/my-interactive-cv', // change to your repo name
+     images: {
+       unoptimized: true,
+     },
+   };
+   ```
+
+### Deploying Automatically via GitHub Actions (Recommended)
+
+1. Go to your repository settings on GitHub → **Pages** → **Build and deployment**.
+2. Set **Source** to **GitHub Actions**.
+3. Create a workflow file in your project: `.github/workflows/deploy.yml` with the following content:
+   ```yaml
+   name: Deploy to GitHub Pages
+
+   on:
+     push:
+       branches: ["Enchancements"] # Triggers on push to the Enchancements branch
+
+   permissions:
+     contents: read
+     pages: write
+     id-token: write
+
+   concurrency:
+     group: "pages"
+     cancel-in-progress: false
+
+   jobs:
+     deploy:
+       environment:
+         name: github-pages
+         url: ${{ steps.deployment.outputs.page_url }}
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout
+           uses: actions/checkout@v4
+         
+         - name: Setup Node
+           uses: actions/setup-node@v4
+           with:
+             node-version: "20"
+             cache: npm
+
+         - name: Setup Pages
+           uses: actions/configure-pages@v4
+
+         - name: Install dependencies
+           run: npm ci
+
+         - name: Build with Next.js
+           run: npm run build
+
+         - name: Upload artifact
+           uses: actions/upload-pages-artifact@v3
+           with:
+             path: ./out
+
+         - name: Deploy to GitHub Pages
+           id: deployment
+           uses: actions/deploy-pages@v4
+   ```
+
+### Deploying Manually
+
+1. Run the build command:
+   ```bash
+   npm run build
+   ```
+2. The static files will be generated in the `out/` folder.
+3. Push the contents of the `out/` folder to your GitHub Pages repository branch (e.g., `gh-pages` or the root of your custom domain repository).
+

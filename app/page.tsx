@@ -10,6 +10,8 @@ import { InteractiveTimeline } from "@/components/InteractiveTimeline";
 import { TechRadar } from "@/components/TechRadar";
 import { ProjectCarousel } from "@/components/ProjectCarousel";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { FocusAreas } from "@/components/FocusAreas";
+
 
 // --- Tilt Card (unchanged from before) ---
 interface TiltCardProps {
@@ -164,29 +166,7 @@ export default function Home() {
       <StatsSection />
 
       {/* INTERACTIVE FOCUS AREAS */}
-      <section className="py-20 max-w-6xl mx-auto px-6">
-        <motion.h2
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-3xl font-bold mb-12 text-center"
-        >
-          My <span className="text-cyan-400">Operating System</span>
-        </motion.h2>
-        <div className="grid md:grid-cols-2 gap-6" style={{ perspective: "1000px" }}>
-          {focusAreas.map((area, index) => (
-            <motion.div
-              key={area.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <TiltCard icon={area.icon} title={area.title} description={area.description} />
-            </motion.div>
-          ))}
-        </div>
-      </section>
+      <FocusAreas />
 
       {/* PROJECT CAROUSEL */}
       <ProjectCarousel />
