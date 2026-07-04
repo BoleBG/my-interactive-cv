@@ -50,15 +50,11 @@ const ParticleField = () => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={particlesData.positions.length / 3}
-          array={particlesData.positions}
-          itemSize={3}
+          args={[particlesData.positions, 3]}
         />
         <bufferAttribute
           attach="attributes-color"
-          count={particlesData.colors.length / 3}
-          array={particlesData.colors}
-          itemSize={3}
+          args={[particlesData.colors, 3]}
         />
       </bufferGeometry>
       <pointsMaterial

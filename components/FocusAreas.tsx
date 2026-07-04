@@ -159,7 +159,7 @@ const focusAreasData: FocusArea[] = [
 
 // --- 3D Tilt Card with Click Functionality ---
 const TiltCard = ({ area, onClick }: { area: FocusArea; onClick: () => void }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
