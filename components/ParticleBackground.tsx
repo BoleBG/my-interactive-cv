@@ -33,29 +33,57 @@ const ParticleField = () => {
 
   useFrame((state) => {
     if (!points.current) return;
+    
     const { x, y } = state.mouse;
     mousePosition.current.x += (x - mousePosition.current.x) * 0.05;
     mousePosition.current.y += (y - mousePosition.current.y) * 0.05;
 
-    points.current.rotation.y = state.clock.elapsedTime * 0.05 + mousePosition.current.x * 0.3;
+    // Use getElapsedTime() instead of elapsedTime property
+    const elapsedTime = state.clock.getElapsedTime();
+    
+    points.current.rotation.y = elapsedTime * 0.05 + mousePosition.current.x * 0.3;
     points.current.rotation.x = mousePosition.current.y * 0.2;
   });
 
   return (
     <points ref={points}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[particlesData.positions, 3]} />
-        <bufferAttribute attach="attributes-color" args={[particlesData.colors, 3]} />
+        <bufferAttribute
+          attach="attributes-position"
+          count={particlesData.positions.length / 3}
+          array={particlesData.positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-color"
+          count={particlesData.colors.length / 3}
+          array={particlesData.colors}
+          itemSize={3}
+        />
       </bufferGeometry>
-      <pointsMaterial size={0.04} vertexColors transparent opacity={0.8} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      <pointsMaterial
+        size={0.04}
+        vertexColors
+        transparent
+        opacity={0.8}
+        sizeAttenuation
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
     </points>
   );
 };
 
-export const ParticleBackground = () => (
-  <div className="absolute inset-0 z-0 opacity-60">
-    <Canvas camera={{ position: [0, 0, 8], fov: 60 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-      <ParticleField />
-    </Canvas>
-  </div>
-);
+export const ParticleBackground = () => {
+  return (
+    <div className="absolute inset-0 z-0 opacity-60">
+      <Canvas
+        camera={{ position: [0, 0, 8], fov: 60 }}
+        dpr={[1, 2]}
+        gl={{ antialias: true, alpha: true }}
+      >
+        <ParticleField />
+      </Canvas>
+    </div>
+  );
+};
