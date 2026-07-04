@@ -152,7 +152,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <MagneticButton href="linkedin.com/in/bosko-cvetkovic-3953779">
+              <MagneticButton href="https://linkedin.com/in/bosko-cvetkovic-3953779">
                 <Linkedin size={18} /> Connect on LinkedIn
               </MagneticButton>
               <MagneticButton href="mailto:boskocvetkovic@gmail.com">
