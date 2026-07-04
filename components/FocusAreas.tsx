@@ -159,7 +159,7 @@ const focusAreasData: FocusArea[] = [
 
 // --- 3D Tilt Card with Click Functionality ---
 const TiltCard = ({ area, onClick }: { area: FocusArea; onClick: () => void }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -168,9 +168,8 @@ const TiltCard = ({ area, onClick }: { area: FocusArea; onClick: () => void }) =
   const glareX = useTransform(x, [-150, 150], ["0%", "100%"]);
   const glareY = useTransform(y, [-150, 150], ["0%", "100%"]);
 
-  function handleMouse(event: React.MouseEvent<HTMLDivElement>) {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
+  function handleMouse(event: React.MouseEvent) {
+    const rect = ref.current!.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
     const mouseX = event.clientX - rect.left;
@@ -197,7 +196,6 @@ const TiltCard = ({ area, onClick }: { area: FocusArea; onClick: () => void }) =
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
     >
-      {/* Dynamic Glare Effect */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
         style={{
@@ -212,7 +210,6 @@ const TiltCard = ({ area, onClick }: { area: FocusArea; onClick: () => void }) =
         <h3 className="text-xl font-bold text-white mb-2">{area.title}</h3>
         <p className="text-slate-400 text-sm leading-relaxed mb-3">{area.description}</p>
         
-        {/* Click hint */}
         <div className="text-xs text-cyan-500/70 group-hover:text-cyan-400 transition-colors flex items-center gap-1">
           <span>Click to learn more</span>
           <motion.span
@@ -227,7 +224,7 @@ const TiltCard = ({ area, onClick }: { area: FocusArea; onClick: () => void }) =
   );
 };
 
-// --- Focus Area Modal ---
+// --- Focus Area Modal (FIXED: Scrollable with Sticky Header) ---
 const FocusAreaModal = ({ area, onClose }: { area: FocusArea | null; onClose: () => void }) => {
   // Close on ESC key
   useEffect(() => {
@@ -268,8 +265,8 @@ const FocusAreaModal = ({ area, onClose }: { area: FocusArea | null; onClose: ()
             className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-md"
           />
 
-          {/* Modal Container */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none overflow-y-auto">
+          {/* Modal Container - Now with max-height and proper scrolling */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <motion.div
               initial={{ 
                 opacity: 0, 
@@ -295,140 +292,149 @@ const FocusAreaModal = ({ area, onClose }: { area: FocusArea | null; onClose: ()
                 damping: 25 
               }}
               onClick={(e) => e.stopPropagation()}
-              className="relative pointer-events-auto w-full max-w-2xl my-8 rounded-3xl bg-slate-900/90 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_0_60px_rgba(6,182,212,0.2)] overflow-hidden"
+              className="relative pointer-events-auto w-full max-w-2xl max-h-[90vh] rounded-3xl bg-slate-900/95 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_0_60px_rgba(6,182,212,0.2)] overflow-hidden flex flex-col"
               style={{ perspective: "1000px" }}
             >
-              {/* Decorative Gradient Glow at Top */}
-              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-cyan-500/20 to-transparent pointer-events-none" />
-              
-              {/* Close Button */}
-              <motion.button
-                onClick={onClose}
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-slate-800/80 backdrop-blur border border-slate-700 hover:border-cyan-500 hover:text-cyan-400 flex items-center justify-center transition-colors"
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </motion.button>
-
-              {/* Content */}
-              <div className="relative p-8 pt-10">
-                {/* Icon and Title Header */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="mb-6"
+              {/* 🔒 STICKY HEADER - Always Visible */}
+              <div className="relative flex-shrink-0">
+                {/* Decorative Gradient Glow at Top */}
+                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-cyan-500/20 to-transparent pointer-events-none" />
+                
+                {/* Close Button - Always Visible */}
+                <motion.button
+                  onClick={onClose}
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-slate-800/90 backdrop-blur border border-slate-700 hover:border-cyan-500 hover:text-cyan-400 flex items-center justify-center transition-colors shadow-lg"
+                  aria-label="Close modal"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-4 text-cyan-400 border border-cyan-500/20">
-                    <Icon size={32} />
-                  </div>
-                  <h2 className="text-3xl font-bold text-white mb-2">
-                    {area.title}
-                  </h2>
-                  <p className="text-slate-400 text-sm">
-                    {area.detailedInfo.title}
-                  </p>
-                </motion.div>
+                  <X size={18} />
+                </motion.button>
 
-                {/* Divider */}
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mb-6 origin-left"
-                />
+                {/* Header Content */}
+                <div className="relative p-8 pb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-4 text-cyan-400 border border-cyan-500/20">
+                      <Icon size={32} />
+                    </div>
+                    <h2 className="text-3xl font-bold text-white mb-2 pr-12">
+                      {area.title}
+                    </h2>
+                    <p className="text-slate-400 text-sm">
+                      {area.detailedInfo.title}
+                    </p>
+                  </motion.div>
 
-                {/* Overview */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25 }}
-                  className="mb-6"
-                >
-                  <p className="text-slate-300 leading-relaxed">
-                    {area.detailedInfo.overview}
-                  </p>
-                </motion.div>
-
-                {/* Approach */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="mb-6"
-                >
-                  <div className="text-xs uppercase tracking-wider text-cyan-400 mb-2">
-                    My Approach
-                  </div>
-                  <p className="text-slate-300 leading-relaxed">
-                    {area.detailedInfo.approach}
-                  </p>
-                </motion.div>
-
-                {/* Outcomes */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 }}
-                  className="mb-6"
-                >
-                  <div className="text-xs uppercase tracking-wider text-cyan-400 mb-3">
-                    Key Outcomes
-                  </div>
-                  <ul className="space-y-2">
-                    {area.detailedInfo.outcomes.map((outcome, i) => (
-                      <motion.li
-                        key={i}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 + i * 0.05 }}
-                        className="flex items-start gap-3 text-slate-300 text-sm"
-                      >
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-                        <span>{outcome}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
-
-                {/* Key Practices */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="mb-6"
-                >
-                  <div className="text-xs uppercase tracking-wider text-cyan-400 mb-3">
-                    Key Practices
-                  </div>
-                  <ul className="space-y-2">
-                    {area.detailedInfo.keyPractices.map((practice, i) => (
-                      <motion.li
-                        key={i}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.55 + i * 0.05 }}
-                        className="flex items-start gap-3 text-slate-300 text-sm"
-                      >
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
-                        <span>{practice}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
-
-                {/* Footer Hint */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                  className="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-500 text-center"
-                >
-                  Press <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">ESC</kbd> or click outside to close
-                </motion.div>
+                  {/* Divider */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mt-6 origin-left"
+                  />
+                </div>
               </div>
+
+              {/* 📜 SCROLLABLE CONTENT AREA */}
+              <div className="relative flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8 custom-scrollbar">
+                <div className="pr-2">
+                  {/* Overview */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25 }}
+                    className="mb-6"
+                  >
+                    <p className="text-slate-300 leading-relaxed">
+                      {area.detailedInfo.overview}
+                    </p>
+                  </motion.div>
+
+                  {/* Approach */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="mb-6"
+                  >
+                    <div className="text-xs uppercase tracking-wider text-cyan-400 mb-2">
+                      My Approach
+                    </div>
+                    <p className="text-slate-300 leading-relaxed">
+                      {area.detailedInfo.approach}
+                    </p>
+                  </motion.div>
+
+                  {/* Outcomes */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35 }}
+                    className="mb-6"
+                  >
+                    <div className="text-xs uppercase tracking-wider text-cyan-400 mb-3">
+                      Key Outcomes
+                    </div>
+                    <ul className="space-y-2">
+                      {area.detailedInfo.outcomes.map((outcome, i) => (
+                        <motion.li
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.4 + i * 0.05 }}
+                          className="flex items-start gap-3 text-slate-300 text-sm"
+                        >
+                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                          <span>{outcome}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </motion.div>
+
+                  {/* Key Practices */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="mb-6"
+                  >
+                    <div className="text-xs uppercase tracking-wider text-cyan-400 mb-3">
+                      Key Practices
+                    </div>
+                    <ul className="space-y-2">
+                      {area.detailedInfo.keyPractices.map((practice, i) => (
+                        <motion.li
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.55 + i * 0.05 }}
+                          className="flex items-start gap-3 text-slate-300 text-sm"
+                        >
+                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0 shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
+                          <span>{practice}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </motion.div>
+
+                  {/* Footer Hint */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    className="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-500 text-center"
+                  >
+                    Press <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">ESC</kbd> or click outside to close
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Bottom Gradient Fade (visual hint that content is scrollable) */}
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-slate-900/95 to-transparent pointer-events-none opacity-60" />
             </motion.div>
           </div>
         </>

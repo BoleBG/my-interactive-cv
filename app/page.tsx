@@ -11,6 +11,7 @@ import { TechRadar } from "@/components/TechRadar";
 import { ProjectCarousel } from "@/components/ProjectCarousel";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { FocusAreas } from "@/components/FocusAreas";
+import { LeadershipPhilosophy } from "@/components/LeadershipPhilosophy";
 
 
 // --- Tilt Card (unchanged from before) ---
@@ -164,6 +165,9 @@ export default function Home() {
 
       {/* STATS SECTION */}
       <StatsSection />
+
+      {/* 🆕 LEADERSHIP PHILOSOPHY */}
+      <LeadershipPhilosophy />
 
       {/* INTERACTIVE FOCUS AREAS */}
       <FocusAreas />
