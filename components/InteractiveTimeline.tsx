@@ -269,4 +269,4 @@ const TimelineCard = ({
       </div>
     </motion.div>
   );
-};InteractiveTimeline copy
+};
