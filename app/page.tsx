@@ -166,7 +166,7 @@ export default function Home() {
       {/* STATS SECTION */}
       <StatsSection />
 
-      {/* 🆕 LEADERSHIP PHILOSOPHY */}
+      {/* LEADERSHIP PHILOSOPHY */}
       <LeadershipPhilosophy />
 
       {/* INTERACTIVE FOCUS AREAS */}
