@@ -79,7 +79,7 @@ export const AnimatedCounter = ({
   );
 };
 
-// --- The Floating Modal ---
+// --- The Floating Modal (FIXED: Scrollable with Sticky Header) ---
 const StatModal = ({ stat, onClose }: { stat: CounterProps | null; onClose: () => void }) => {
   // Close on ESC key
   useEffect(() => {
@@ -102,6 +102,8 @@ const StatModal = ({ stat, onClose }: { stat: CounterProps | null; onClose: () =
     };
   }, [stat]);
 
+  if (!stat) return null;
+
   return (
     <AnimatePresence>
       {stat && (
@@ -116,7 +118,7 @@ const StatModal = ({ stat, onClose }: { stat: CounterProps | null; onClose: () =
             className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-md"
           />
 
-          {/* Modal Container */}
+          {/* Modal Container - Now with max-height and proper scrolling */}
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
             <motion.div
               initial={{ 
@@ -143,99 +145,108 @@ const StatModal = ({ stat, onClose }: { stat: CounterProps | null; onClose: () =
                 damping: 25 
               }}
               onClick={(e) => e.stopPropagation()}
-              className="relative pointer-events-auto w-full max-w-lg rounded-3xl bg-slate-900/90 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_0_60px_rgba(6,182,212,0.2)] overflow-hidden"
+              className="relative pointer-events-auto w-full max-w-lg max-h-[90vh] rounded-3xl bg-slate-900/95 backdrop-blur-2xl border border-cyan-500/30 shadow-[0_0_60px_rgba(6,182,212,0.2)] overflow-hidden flex flex-col"
               style={{ perspective: "1000px" }}
             >
-              {/* Decorative Gradient Glow at Top */}
-              <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-cyan-500/20 to-transparent pointer-events-none" />
-              
-              {/* Close Button */}
-              <motion.button
-                onClick={onClose}
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-slate-800/80 backdrop-blur border border-slate-700 hover:border-cyan-500 hover:text-cyan-400 flex items-center justify-center transition-colors"
-                aria-label="Close modal"
-              >
-                <X size={18} />
-              </motion.button>
-
-              {/* Content */}
-              <div className="relative p-8 pt-10">
-                {/* Big Number Header */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="mb-6"
+              {/* 🔒 STICKY HEADER - Always Visible */}
+              <div className="relative flex-shrink-0">
+                {/* Decorative Gradient Glow at Top */}
+                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-cyan-500/20 to-transparent pointer-events-none" />
+                
+                {/* Close Button - Always Visible */}
+                <motion.button
+                  onClick={onClose}
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-slate-800/90 backdrop-blur border border-slate-700 hover:border-cyan-500 hover:text-cyan-400 flex items-center justify-center transition-colors shadow-lg"
+                  aria-label="Close modal"
                 >
-                  <div className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-2">
-                    {stat.prefix}{stat.value}{stat.suffix}
-                  </div>
-                  <div className="text-slate-400 text-sm uppercase tracking-wider">
-                    {stat.label}
-                  </div>
-                </motion.div>
+                  <X size={18} />
+                </motion.button>
 
-                {/* Divider */}
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                  className="h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mb-6 origin-left"
-                />
+                {/* Header Content */}
+                <div className="relative p-8 pb-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <div className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent mb-2">
+                      {stat.prefix}{stat.value}{stat.suffix}
+                    </div>
+                    <div className="text-slate-400 text-sm uppercase tracking-wider">
+                      {stat.label}
+                    </div>
+                  </motion.div>
 
-                {/* Title & Description */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.25 }}
-                >
-                  <h3 className="text-2xl font-bold text-white mb-3">
-                    {stat.additionalInfo?.title}
-                  </h3>
-                  <p className="text-slate-300 leading-relaxed mb-6">
-                    {stat.additionalInfo?.description}
-                  </p>
-                </motion.div>
+                  {/* Divider */}
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent mt-6 origin-left"
+                  />
+                </div>
+              </div>
 
-                {/* Highlights */}
-                {stat.additionalInfo?.highlights && stat.additionalInfo.highlights.length > 0 && (
+              {/* 📜 SCROLLABLE CONTENT AREA */}
+              <div className="relative flex-1 overflow-y-auto overflow-x-hidden px-8 pb-8 custom-scrollbar">
+                <div className="pr-2">
+                  {/* Title & Description */}
                   <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.35 }}
+                    transition={{ delay: 0.25 }}
                   >
-                    <div className="text-xs uppercase tracking-wider text-cyan-400 mb-3">
-                      Key Highlights
-                    </div>
-                    <ul className="space-y-2">
-                      {stat.additionalInfo.highlights.map((highlight, i) => (
-                        <motion.li
-                          key={i}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.4 + i * 0.05 }}
-                          className="flex items-start gap-3 text-slate-300 text-sm"
-                        >
-                          <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-                          <span>{highlight}</span>
-                        </motion.li>
-                      ))}
-                    </ul>
+                    <h3 className="text-2xl font-bold text-white mb-3">
+                      {stat.additionalInfo?.title}
+                    </h3>
+                    <p className="text-slate-300 leading-relaxed mb-6">
+                      {stat.additionalInfo?.description}
+                    </p>
                   </motion.div>
-                )}
 
-                {/* Footer Hint */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-500 text-center"
-                >
-                  Press <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">ESC</kbd> or click outside to close
-                </motion.div>
+                  {/* Highlights */}
+                  {stat.additionalInfo?.highlights && stat.additionalInfo.highlights.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.35 }}
+                    >
+                      <div className="text-xs uppercase tracking-wider text-cyan-400 mb-3">
+                        Key Highlights
+                      </div>
+                      <ul className="space-y-2">
+                        {stat.additionalInfo.highlights.map((highlight, i) => (
+                          <motion.li
+                            key={i}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.4 + i * 0.05 }}
+                            className="flex items-start gap-3 text-slate-300 text-sm"
+                          >
+                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                            <span>{highlight}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  )}
+
+                  {/* Footer Hint */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="mt-8 pt-6 border-t border-slate-800 text-xs text-slate-500 text-center"
+                  >
+                    Press <kbd className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">ESC</kbd> or click outside to close
+                  </motion.div>
+                </div>
               </div>
+
+              {/* Bottom Gradient Fade (visual hint that content is scrollable) */}
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-slate-900/95 to-transparent pointer-events-none opacity-60" />
             </motion.div>
           </div>
         </>
