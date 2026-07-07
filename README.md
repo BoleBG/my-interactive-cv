@@ -2,7 +2,7 @@
 
 An interactive 3D CV/portfolio website built with **Next.js**, **React Three Fiber**, **Framer Motion**, and **Tailwind CSS**.
 
-🌐 **Live:** [https://bolebg.github.io/my-interactive-cv](https://bolebg.github.io/my-interactive-cv)
+🌐 **Live:** [https://myinteractivecv.com](https://myinteractivecv.com)
 
 ## Tech Stack
 
@@ -41,7 +41,8 @@ This project is configured for **GitHub Pages** deployment via GitHub Actions.
 
 ### Configuration
 
-- `next.config.ts` — `output: 'export'` + `basePath: '/my-interactive-cv'` for sub-path hosting
+- `next.config.ts` — `output: 'export'` for static HTML export
+- `CNAME` — Custom domain `myinteractivecv.com`
 - `images.unoptimized: true` — required for static export
 
 ### Manual Setup (one-time)
