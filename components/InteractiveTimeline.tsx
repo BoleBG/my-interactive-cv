@@ -23,7 +23,7 @@ interface TimelineItem {
 // 📝 REPLACE THE CONTENT BELOW WITH YOUR EXACT ORIGINAL WEBSITE TEXT
 const timelineData: TimelineItem[] = [
   {
-    year: "2023 - Present",
+    year: "Current role",
     role: "Head of Engineering",
     company: "Global Enterprise",
     description: "Leading 100+ person engineering organization across multiple continents. Driving AI integration strategy and architectural transformation.",
@@ -40,7 +40,7 @@ const timelineData: TimelineItem[] = [
     }
   },
   {
-    year: "2020 - 2023",
+    year: "Previous role",
     role: "Engineering Manager",
     company: "High-Growth Scale-up",
     description: "Scaled engineering teams from 20 to 60. Implemented engineering excellence frameworks and aligned technical strategy with product vision.",
@@ -57,7 +57,7 @@ const timelineData: TimelineItem[] = [
     }
   },
   {
-    year: "2017 - 2020",
+    year: "Earlier role",
     role: "VP of Engineering",
     company: "Product-Led Growth Company",
     description: "Owned the entire engineering organization. Built hiring pipelines, established architecture review boards, and drove cloud migration initiatives.",
@@ -74,7 +74,7 @@ const timelineData: TimelineItem[] = [
     }
   },
   {
-    year: "2012 - 2017",
+    year: "Earlier role",
     role: "Team Lead / Senior Architect",
     company: "Technical Foundation",
     description: "Led complex .NET and React projects. Designed microservices architectures and mentored junior engineers into senior roles.",
