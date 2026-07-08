@@ -322,7 +322,7 @@ export const StatsSection = () => {
   ];
 
   return (
-    <section className="py-20 max-w-6xl mx-auto px-6">
+    <section id="stats" className="py-20 max-w-6xl mx-auto px-6">
       <motion.h2 
         initial={{ opacity: 0 }} 
         whileInView={{ opacity: 1 }} 

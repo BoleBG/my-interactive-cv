@@ -12,6 +12,7 @@ import { ProjectCarousel } from "@/components/ProjectCarousel";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { FocusAreas } from "@/components/FocusAreas";
 import { LeadershipPhilosophy } from "@/components/LeadershipPhilosophy";
+import { NavigationMenu } from "@/components/NavigationMenu";
 
 
 // --- Tilt Card (unchanged from before) ---
@@ -113,13 +114,16 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 light:bg-slate-50 text-white light:text-slate-900 overflow-x-hidden selection:bg-cyan-500/30 transition-colors duration-500">
       
+      {/* Navigation Menu */}
+      <NavigationMenu />
+
       {/* Theme Toggle - Fixed Position */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className="fixed z-50" style={{ top: '12px', right: 'calc(24px + 100px)' }}>
         <ThemeToggle />
       </div>
 
       {/* HERO SECTION with Particle Background */}
-      <section className="relative min-h-screen flex items-center">
+      <section id="hero" className="relative min-h-screen flex items-center pt-16">
         <ParticleBackground />
         
         {/* Ambient Background Glow */}
@@ -166,20 +170,20 @@ export default function Home() {
       {/* STATS SECTION */}
       <StatsSection />
 
-      {/* LEADERSHIP PHILOSOPHY */}
-      <LeadershipPhilosophy />
+      {/* LEADERSHIP PHILOSOPHY - ID added for navigation */}
+      <div id="philosophy"><LeadershipPhilosophy /></div>
 
-      {/* INTERACTIVE FOCUS AREAS */}
-      <FocusAreas />
+      {/* INTERACTIVE FOCUS AREAS - ID added for navigation */}
+      <div id="focus"><FocusAreas /></div>
 
-      {/* PROJECT CAROUSEL */}
-      <ProjectCarousel />
+      {/* PROJECT CAROUSEL - ID added for navigation */}
+      <div id="projects"><ProjectCarousel /></div>
 
-      {/* TIMELINE */}
-      <InteractiveTimeline />
+      {/* TIMELINE - ID added for navigation */}
+      <div id="timeline"><InteractiveTimeline /></div>
 
-      {/* TECH RADAR */}
-      <TechRadar />
+      {/* TECH RADAR - ID added for navigation */}
+      <div id="tech-radar"><TechRadar /></div>
 
       {/* FOOTER */}
       <footer className="py-20 border-t border-slate-900">
