@@ -28,18 +28,16 @@ export const AnimatedCounter = ({
   onClick 
 }: CounterProps & { onClick?: () => void }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const inView = useInView(ref, { once: true, margin: "0px" });
+  const inView = useInView(ref, { once: true, margin: "50px" });
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => `${prefix}${Math.round(latest)}${suffix}`);
 
   useEffect(() => {
-    if (inView && !hasAnimated) {
-      setHasAnimated(true);
+    if (inView) {
       const controls = animate(count, value, { duration, ease: "easeOut" });
       return controls.stop;
     }
-  }, [inView, value, duration, count, hasAnimated]);
+  }, [inView, value, duration, count]);
 
   const isClickable = !!additionalInfo;
 
@@ -51,7 +49,7 @@ export const AnimatedCounter = ({
       whileHover={isClickable ? { y: -4, scale: 1.02 } : {}}
       whileTap={isClickable ? { scale: 0.98 } : {}}
       onClick={onClick}
-      className={`relative group p-8 rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-slate-800 transition-all duration-500 ${
+      className={`relative group p-4 sm:p-6 md:p-8 rounded-2xl bg-slate-900/40 backdrop-blur-xl border border-slate-800 transition-all duration-500 ${
         isClickable ? "cursor-pointer hover:border-cyan-500/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]" : ""
       }`}
     >
@@ -59,10 +57,10 @@ export const AnimatedCounter = ({
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/0 to-purple-500/0 group-hover:from-cyan-500/5 group-hover:to-purple-500/5 transition-all duration-500" />
       
       <div className="relative">
-        <div className="text-5xl md:text-6xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+        <div className="text-4xl sm:text-5xl md:text-6xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
           <motion.span ref={ref}>{rounded}</motion.span>
         </div>
-        <div className="text-slate-400 text-sm uppercase tracking-wider">
+        <div className="text-slate-400 text-xs sm:text-sm uppercase tracking-wider">
           {label}
         </div>
         {isClickable && (
