@@ -156,7 +156,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <MagneticButton href="https://linkedin.com/in/bosko-cvetkovic-3953779">
+              <MagneticButton href="https://www.linkedin.com/in/bo%C5%A1ko-cvetkovi%C4%87-3953779/">
                 <Linkedin size={18} /> Connect on LinkedIn
               </MagneticButton>
               <MagneticButton href="mailto:boskocvetkovic@gmail.com">
@@ -192,10 +192,10 @@ export default function Home() {
           <p className="text-slate-500 mb-8">No forms, no friction. Just reach out directly.</p>
           <div className="flex justify-center gap-6 text-slate-400 flex-wrap">
             <a href="mailto:hello@myinteractivecv.com" className="hover:text-cyan-400 transition-colors flex items-center gap-2">
-              <Mail size={18} /> hello@myinteractivecv.com
+              <Mail size={18} /> boskocvetkovic@gmail.com
             </a>
             <span className="text-slate-800 hidden md:inline">|</span>
-            <a href="https://linkedin.com/in/yourprofile" className="hover:text-cyan-400 transition-colors flex items-center gap-2">
+            <a href="https://www.linkedin.com/in/bo%C5%A1ko-cvetkovi%C4%87-3953779/" className="hover:text-cyan-400 transition-colors flex items-center gap-2">
               <Linkedin size={18} /> LinkedIn
             </a>
           </div>
