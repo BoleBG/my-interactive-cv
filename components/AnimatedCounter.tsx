@@ -28,16 +28,18 @@ export const AnimatedCounter = ({
   onClick 
 }: CounterProps & { onClick?: () => void }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const inView = useInView(ref, { once: true, margin: "0px" });
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) => `${prefix}${Math.round(latest)}${suffix}`);
 
   useEffect(() => {
-    if (inView) {
+    if (inView && !hasAnimated) {
+      setHasAnimated(true);
       const controls = animate(count, value, { duration, ease: "easeOut" });
       return controls.stop;
     }
-  }, [inView, value, duration, count]);
+  }, [inView, value, duration, count, hasAnimated]);
 
   const isClickable = !!additionalInfo;
 
